@@ -1,4 +1,5 @@
 <div id="videoOsdPage" data-role="page" class="page libraryPage" data-backbutton="true">
+    <div class="osdTextContainer currentTimeText hide" style="display: flex; justify-content: flex-end"></div>
     <div class="syncPlayContainer">
         <div id="syncPlayIcon" class="syncPlayIconCircle">
             <span class="primary-icon material-icons play" aria-hidden="true"></span>
@@ -29,37 +30,37 @@
 
             <div class="buttons focuscontainer-x">
                 <div dir="ltr">
-                    <button is="paper-icon-button-light" class="btnRecord autoSize hide">
-                        <span class="xlargePaperIconButton material-icons fiber_manual_record" aria-hidden="true"></span>
-                    </button>
+                <button is="paper-icon-button-light" class="btnRecord autoSize hide">
+                    <span class="xlargePaperIconButton material-icons fiber_manual_record" aria-hidden="true"></span>
+                </button>
 
-                    <button is="paper-icon-button-light" class="btnPreviousTrack autoSize hide" title="${PreviousTrack}">
-                        <span class="xlargePaperIconButton material-icons skip_previous" aria-hidden="true"></span>
-                    </button>
+                <button is="paper-icon-button-light" class="btnPreviousTrack autoSize hide" title="${PreviousTrack}">
+                    <span class="xlargePaperIconButton material-icons skip_previous" aria-hidden="true"></span>
+                </button>
 
-                    <button is="paper-icon-button-light" class="btnPreviousChapter autoSize hide" title="${PreviousChapter}">
-                        <span class="xlargePaperIconButton material-icons undo" aria-hidden="true"></span>
-                    </button>
+                <button is="paper-icon-button-light" class="btnPreviousChapter autoSize hide" title="${PreviousChapter}">
+                    <span class="xlargePaperIconButton material-icons undo" aria-hidden="true"></span>
+                </button>
 
-                    <button is="paper-icon-button-light" class="btnRewind" title="${Rewind} (j)" aria-label="${Rewind}">
-                        <span class="xlargePaperIconButton material-icons fast_rewind" aria-hidden="true"></span>
-                    </button>
+                <button is="paper-icon-button-light" class="btnRewind" title="${Rewind} (j)" aria-label="${Rewind}">
+                    <span class="xlargePaperIconButton material-icons fast_rewind" aria-hidden="true"></span>
+                </button>
 
-                    <button is="paper-icon-button-light" class="btnPause autoSize">
-                        <span class="xlargePaperIconButton material-icons pause" aria-hidden="true"></span>
-                    </button>
+                <button is="paper-icon-button-light" class="btnPause autoSize">
+                    <span class="xlargePaperIconButton material-icons pause" aria-hidden="true"></span>
+                </button>
 
-                    <button is="paper-icon-button-light" class="btnFastForward" title="${FastForward} (l)" aria-label="${FastForward}">
-                        <span class="xlargePaperIconButton material-icons fast_forward" aria-hidden="true"></span>
-                    </button>
+                <button is="paper-icon-button-light" class="btnFastForward" title="${FastForward} (l)" aria-label="${FastForward}">
+                    <span class="xlargePaperIconButton material-icons fast_forward" aria-hidden="true"></span>
+                </button>
 
-                    <button is="paper-icon-button-light" class="btnNextChapter autoSize hide" title="${NextChapter}">
-                        <span class="xlargePaperIconButton material-icons redo" aria-hidden="true"></span>
-                    </button>
+                <button is="paper-icon-button-light" class="btnNextChapter autoSize hide" title="${NextChapter}">
+                    <span class="xlargePaperIconButton material-icons redo" aria-hidden="true"></span>
+                </button>
 
-                    <button is="paper-icon-button-light" class="btnNextTrack autoSize hide" title="${NextTrack}">
-                        <span class="xlargePaperIconButton material-icons skip_next" aria-hidden="true"></span>
-                    </button>
+                <button is="paper-icon-button-light" class="btnNextTrack autoSize hide" title="${NextTrack}">
+                    <span class="xlargePaperIconButton material-icons skip_next" aria-hidden="true"></span>
+                </button>
                 </div>
 
                 <div class="osdTimeText">

@@ -240,6 +240,27 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
             resetIdle();
         }
 
+        function showTvOsd(e) {
+            slideDownToShow(headerElement);
+
+            const key = keyboardnavigation.getKeyName(e);
+            if (keyboardnavigation.isHorizontalNavigationKey(key) && !currentVisibleMenu) {
+                showSliderOsdControls();
+                switch (key) {
+                    case 'ArrowRight':
+                        playbackManager.fastForward(currentPlayer);
+                        break;
+                    case 'ArrowLeft':
+                        playbackManager.rewind(currentPlayer);
+                        break;
+                }
+            } else {
+                osdButtons.classList.remove('hide');
+                showOsd();
+            }
+            resetIdle();
+        }
+
         function hideOsd() {
             slideUpToHide(headerElement);
             hideMainOsdControls();
@@ -298,9 +319,30 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                 elem.classList.remove('hide');
                 elem.classList.remove('videoOsdBottom-hidden');
 
+                osdButtons.classList.remove('hide');
+
                 if (!layoutManager.mobile) {
                     setTimeout(function () {
                         focusManager.focus(elem.querySelector('.btnPause'));
+                    }, 50);
+                }
+                toggleSubtitleSync();
+            }
+        }
+
+        function showSliderOsdControls() {
+            if (!currentVisibleMenu) {
+                const elem = osdBottomElement;
+                currentVisibleMenu = 'osd';
+                clearHideAnimationEventListeners(elem);
+                elem.classList.remove('hide');
+                elem.classList.remove('videoOsdBottom-hidden');
+
+                osdButtons.classList.add('hide');
+
+                if (!layoutManager.mobile) {
+                    setTimeout(function () {
+                        focusManager.focus(osdBottomElement.querySelector('.osdPositionSlider'));
                     }, 50);
                 }
                 toggleSubtitleSync();
@@ -733,6 +775,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
         }
 
         function updateTimeDisplay(positionTicks, runtimeTicks, playbackStartTimeTicks, playbackRate, bufferedRanges) {
+            currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
             if (enableProgressByTimeOfDay) {
                 if (nowPlayingPositionSlider && !nowPlayingPositionSlider.dragging) {
                     if (programStartDateMs && programEndDateMs) {
@@ -770,7 +813,10 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                     }
 
                     if (runtimeTicks && positionTicks != null && currentRuntimeTicks && !enableProgressByTimeOfDay && currentItem.RunTimeTicks && currentItem.Type !== 'Recording' && playbackRate !== null) {
-                        endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
+                        const endsAtTime = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
+                        const currentTime = datetime.getDisplayTime(new Date());
+                        endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + globalize.translate('CurrentTimeAndEndsAtValue', currentTime, endsAtTime);
+                        //endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
                     } else {
                         endsAtText.innerHTML = '';
                     }
@@ -790,6 +836,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                 const leftTicks = runtimeTicks - positionTicks;
                 if (leftTicks >= 0) {
                     updateTimeText(nowPlayingDurationText, leftTicks);
+                    nowPlayingDurationText.innerHTML = '-' + nowPlayingDurationText.innerHTML;
                     nowPlayingDurationText.classList.remove('hide');
                 } else {
                     nowPlayingPositionText.classList.add('hide');
@@ -1072,7 +1119,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
             }
 
             if (layoutManager.tv && keyboardnavigation.isNavigationKey(key)) {
-                showOsd();
+                showTvOsd(e);
                 return;
             }
 
@@ -1322,6 +1369,8 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
         const transitionEndEventName = dom.whichTransitionEvent();
         const headerElement = document.querySelector('.skinHeader');
         const osdBottomElement = document.querySelector('.videoOsdBottom-maincontrols');
+        const osdButtons = document.querySelector('.buttons');
+        const currentTimeText = document.querySelector('.currentTimeText');
 
         nowPlayingPositionSlider.enableKeyboardDragging();
         nowPlayingVolumeSlider.enableKeyboardDragging();

@@ -44,6 +44,7 @@ const KeyNames = {
  * Keys used for keyboard navigation.
  */
 const NavigationKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+const HorizontalNavigationKeys = ['ArrowLeft', 'ArrowRight'];
 
 /**
  * Elements for which navigation should be constrained.
@@ -82,6 +83,16 @@ export function getKeyName(event) {
  */
 export function isNavigationKey(key) {
     return NavigationKeys.indexOf(key) != -1;
+}
+
+/**
+ * Returns _true_ if key is used for Left/Right navigation.
+ *
+ * @param {string} key - Key name.
+ * @return {boolean} _true_ if key is used for Left/Right navigation.
+ */
+export function isHorizontalNavigationKey(key) {
+    return HorizontalNavigationKeys.indexOf(key) != -1;
 }
 
 export function enable() {
@@ -191,5 +202,6 @@ if (navigator.getGamepads && appSettings.enableGamepad()) { /* eslint-disable-li
 export default {
     enable: enable,
     getKeyName: getKeyName,
-    isNavigationKey: isNavigationKey
+    isNavigationKey: isNavigationKey,
+    isHorizontalNavigationKey: isHorizontalNavigationKey
 };
