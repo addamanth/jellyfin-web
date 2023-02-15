@@ -1382,7 +1382,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
         const nowPlayingDurationText = view.querySelector('.osdDurationText');
         const startTimeText = view.querySelector('.startTimeText');
         const endTimeText = view.querySelector('.endTimeText');
-        const endsAtText = view.querySelector('.endsAtText');
+        //const endsAtText = view.querySelector('.endsAtText');
         const btnRewind = view.querySelector('.btnRewind');
         const btnFastForward = view.querySelector('.btnFastForward');
         const transitionEndEventName = dom.whichTransitionEvent();
