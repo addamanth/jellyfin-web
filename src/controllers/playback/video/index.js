@@ -775,7 +775,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
         }
 
         function updateTimeDisplay(positionTicks, runtimeTicks, playbackStartTimeTicks, playbackRate, bufferedRanges) {
-            currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
+            //currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
             if (enableProgressByTimeOfDay) {
                 if (nowPlayingPositionSlider && !nowPlayingPositionSlider.dragging) {
                     if (programStartDateMs && programEndDateMs) {
@@ -803,6 +803,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                 nowPlayingPositionText.innerHTML = '';
                 nowPlayingDurationText.innerHTML = '';
             } else {
+                let endsAtTime;
                 if (nowPlayingPositionSlider && !nowPlayingPositionSlider.dragging) {
                     if (runtimeTicks) {
                         let pct = positionTicks / runtimeTicks;
@@ -813,12 +814,13 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                     }
 
                     if (runtimeTicks && positionTicks != null && currentRuntimeTicks && !enableProgressByTimeOfDay && currentItem.RunTimeTicks && currentItem.Type !== 'Recording' && playbackRate !== null) {
-                        const endsAtTime = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
-                        const currentTime = datetime.getDisplayTime(new Date());
-                        endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + globalize.translate('CurrentTimeAndEndsAtValue', currentTime, endsAtTime);
+                        endsAtTime = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
+                        //const currentTime = datetime.getDisplayTime(new Date());
+                        //endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + globalize.translate('CurrentTimeAndEndsAtValue', currentTime, endsAtTime);
+                        //currentTimeText.innerHTML = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
                         //endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
                     } else {
-                        endsAtText.innerHTML = '';
+                        //endsAtText.innerHTML = '';
                     }
                 }
 
@@ -845,6 +847,9 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                 } else {
                     updateTimeText(nowPlayingDurationText, runtimeTicks);
                     nowPlayingDurationText.classList.remove('hide');
+                }
+                if (endsAtTime) {
+                    nowPlayingDurationText.innerHTML = nowPlayingDurationText.innerHTML + ' / ' + endsAtTime;
                 }
             }
         }
@@ -1384,7 +1389,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
         const headerElement = document.querySelector('.skinHeader');
         const osdBottomElement = document.querySelector('.videoOsdBottom-maincontrols');
         const osdButtons = document.querySelector('.buttons');
-        const currentTimeText = document.querySelector('.currentTimeText');
+        //const currentTimeText = document.querySelector('.osdCurrentTimeText');
 
         nowPlayingPositionSlider.enableKeyboardDragging();
         nowPlayingVolumeSlider.enableKeyboardDragging();

@@ -18,6 +18,7 @@ import Dashboard, { pageClassOn } from '../utils/dashboard';
 import ServerConnections from '../components/ServerConnections';
 import Events from '../utils/events.ts';
 import { getParameterByName } from '../utils/url.ts';
+import datetime from '../scripts/datetime';
 
 import '../elements/emby-button/paper-icon-button-light';
 
@@ -43,6 +44,7 @@ import '../assets/css/flexstyles.scss';
         html += '<button is="paper-icon-button-light" class="headerCastButton castButton headerButton headerButtonRight hide"><span class="material-icons cast" aria-hidden="true"></span></button>';
         html += '<button type="button" is="paper-icon-button-light" class="headerButton headerButtonRight headerSearchButton hide"><span class="material-icons search" aria-hidden="true"></span></button>';
         html += '<button is="paper-icon-button-light" class="headerButton headerButtonRight headerUserButton hide"><span class="material-icons person" aria-hidden="true"></span></button>';
+        html += '<div class="currentTimeText" style="padding-right: 0.8em;"></div>';
         html += '</div>';
         html += '</div>';
         html += '<div class="headerTabs sectionTabs hide">';
@@ -60,6 +62,13 @@ import '../assets/css/flexstyles.scss';
         headerAudioPlayerButton = skinHeader.querySelector('.headerAudioPlayerButton');
         headerSearchButton = skinHeader.querySelector('.headerSearchButton');
         headerSyncButton = skinHeader.querySelector('.headerSyncButton');
+        currentTimeText = skinHeader.querySelector('.currentTimeText');
+
+        currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
+
+        setInterval(function() {
+            currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
+        }, 1000);
 
         retranslateUi();
         lazyLoadViewMenuBarImages();
@@ -939,6 +948,7 @@ import '../assets/css/flexstyles.scss';
     let headerSearchButton;
     let headerAudioPlayerButton;
     let headerSyncButton;
+    let currentTimeText;
     const enableLibraryNavDrawer = layoutManager.desktop;
     const enableLibraryNavDrawerHome = !layoutManager.tv;
     const skinHeader = document.querySelector('.skinHeader');
