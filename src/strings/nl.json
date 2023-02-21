@@ -1692,5 +1692,15 @@
     "LabelDummyChapterDuration": "Interval:",
     "LabelDummyChapterCount": "Limiet:",
     "LabelDummyChapterCountHelp": "Het maximum aantal hoofdstukafbeeldingen dat wordt opgehaald uit ieder mediabestand.",
-    "LabelChapterImageResolution": "Resolutie:"
+    "LabelChapterImageResolution": "Resolutie:",
+    "PreferEmbeddedExtrasTitlesOverFileNames": "Ingesloten titels boven bestandsnamen verkiezen voor extra's",
+    "PreferEmbeddedExtrasTitlesOverFileNamesHelp": "Extra's hebben vaak dezelfde ingesloten naam als de hoofdinhoud; vink dit aan om toch de ingesloten titels te gebruiken.",
+    "SaveRecordingImagesHelp": "Afbeeldingen uit EPG-vermeldingen naast media opslaan.",
+    "SaveRecordingNFO": "EPG-metadata in NFO opslaan",
+    "SaveRecordingNFOHelp": "Metadata uit de EPG-vermeldingen naast media opslaan.",
+    "SaveRecordingImages": "EPG-afbeeldingen opslaan",
+    "HeaderDummyChapter": "Hoofdstukafbeeldingen",
+    "LabelDummyChapterDurationHelp": "De extractieinterval voor hoofdstukafbeeldingen in seconden.",
+    "ResolutionMatchSource": "Gelijk aan bron",
+    "HeaderRecordingMetadataSaving": "Metadata opname"
 }
