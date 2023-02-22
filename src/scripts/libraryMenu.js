@@ -44,7 +44,7 @@ import '../assets/css/flexstyles.scss';
         html += '<button is="paper-icon-button-light" class="headerCastButton castButton headerButton headerButtonRight hide"><span class="material-icons cast" aria-hidden="true"></span></button>';
         html += '<button type="button" is="paper-icon-button-light" class="headerButton headerButtonRight headerSearchButton hide"><span class="material-icons search" aria-hidden="true"></span></button>';
         html += '<button is="paper-icon-button-light" class="headerButton headerButtonRight headerUserButton hide"><span class="material-icons person" aria-hidden="true"></span></button>';
-        html += '<div class="currentTimeText" style="padding-left: 0.8em;padding-right: 0.8em;font-weight: bold;color: #00a4dc"></div>';
+        html += '<div class="currentTimeText" style="padding-left: 0.8em;padding-right: 0.8em;font-size: 27px;font-weight: bold;color: #00a4dc"></div>';
         html += '</div>';
         html += '</div>';
         html += '<div class="headerTabs sectionTabs hide">';
