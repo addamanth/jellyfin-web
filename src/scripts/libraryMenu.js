@@ -23,8 +23,8 @@ import datetime from '../scripts/datetime';
 import '../elements/emby-button/paper-icon-button-light';
 
 import 'material-design-icons-iconfont';
-import '../assets/css/scrollstyles.scss';
-import '../assets/css/flexstyles.scss';
+import '../styles/scrollstyles.scss';
+import '../styles/flexstyles.scss';
 
 /* eslint-disable indent */
 
