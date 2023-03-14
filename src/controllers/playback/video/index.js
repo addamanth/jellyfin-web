@@ -1026,7 +1026,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                     title: globalize.translate('Audio'),
                     positionTo: positionTo
                 }).then(function (id) {
-                    const index = parseInt(id);
+                    const index = parseInt(id, 10);
 
                     if (index !== currentIndex) {
                         playbackManager.setAudioStreamIndex(index, player);
@@ -1073,7 +1073,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                 positionTo
             }).then(function (id) {
                 if (id) {
-                    const index = parseInt(id);
+                    const index = parseInt(id, 10);
                     if (index !== currentIndex) {
                         playbackManager.setSecondarySubtitleStreamIndex(index, player);
                     }
@@ -1150,7 +1150,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                             console.error(e);
                         }
                     } else {
-                        const index = parseInt(id);
+                        const index = parseInt(id, 10);
 
                         if (index !== currentIndex) {
                             playbackManager.setSubtitleStreamIndex(index, player);
@@ -1686,7 +1686,7 @@ import { setBackdropTransparency, TRANSPARENCY_LEVEL } from '../../../components
                     ms /= 100;
                     ms *= value;
                     ms += programStartDateMs;
-                    return '<h1 class="sliderBubbleText">' + getDisplayTimeWithoutAmPm(new Date(parseInt(ms)), true) + '</h1>';
+                    return '<h1 class="sliderBubbleText">' + getDisplayTimeWithoutAmPm(new Date(parseInt(ms, 10)), true) + '</h1>';
                 }
 
                 return '--:--';
