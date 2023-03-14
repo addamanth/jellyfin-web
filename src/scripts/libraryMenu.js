@@ -64,8 +64,6 @@ import '../styles/flexstyles.scss';
         headerSyncButton = skinHeader.querySelector('.headerSyncButton');
         currentTimeText = skinHeader.querySelector('.currentTimeText');
 
-        currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
-
         setInterval(function() {
             currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
         }, 1000);
