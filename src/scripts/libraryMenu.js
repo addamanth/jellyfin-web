@@ -45,7 +45,7 @@ import '../styles/flexstyles.scss';
         html += '<button is="paper-icon-button-light" class="headerCastButton castButton headerButton headerButtonRight hide"><span class="material-icons cast" aria-hidden="true"></span></button>';
         html += '<button type="button" is="paper-icon-button-light" class="headerButton headerButtonRight headerSearchButton hide"><span class="material-icons search" aria-hidden="true"></span></button>';
         html += '<button is="paper-icon-button-light" class="headerButton headerButtonRight headerUserButton hide"><span class="material-icons person" aria-hidden="true"></span></button>';
-        html += '<div class="currentTimeText"></div>';
+        html += '<div class="currentTimeText hide"></div>';
         html += '</div>';
         html += '</div>';
         html += '<div class="headerTabs sectionTabs hide">';
@@ -65,14 +65,11 @@ import '../styles/flexstyles.scss';
         headerSyncButton = skinHeader.querySelector('.headerSyncButton');
         currentTimeText = skinHeader.querySelector('.currentTimeText');
 
-        setInterval(function() {
-            currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
-        }, 1000);
-
         retranslateUi();
         lazyLoadViewMenuBarImages();
         bindMenuEvents();
         updateCastIcon();
+        updateClock();
     }
 
     function getCurrentApiClient() {
@@ -193,6 +190,17 @@ import '../styles/flexstyles.scss';
         } else {
             headerUserButton.classList.remove('headerUserButtonRound');
             headerUserButton.innerHTML = '<span class="material-icons person" aria-hidden="true"></span>';
+        }
+    }
+
+    function updateClock() {
+        if (layoutManager.tv) {
+            currentTimeText.classList.remove('hide');
+            setInterval(function() {
+                 currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
+            }, 1000);
+        } else {
+            currentTimeText.classList.add('hide');
         }
     }
 
