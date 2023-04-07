@@ -557,7 +557,7 @@
     "LabelMethod": "Methode:",
     "LabelMinBackdropDownloadWidth": "Minimale Breite der zu herunterladenden Hintergründe:",
     "LabelMinResumeDuration": "Minimale Dauer für Wiederaufnahme:",
-    "LabelMinResumeDurationHelp": "Die kürzeste Videolänge in Sekunden, die den Wiedergabeort speichert und Sie fortfahren lässt.",
+    "LabelMinResumeDurationHelp": "Die kürzeste Wiedergabezeit in Sekunden, die gespeichert wird und von der Sie fortfahren können.",
     "LabelMinResumePercentage": "Minimale Prozent für Wiederaufnahme:",
     "LabelMinResumePercentageHelp": "Titel werden als ungesehen eingetragen, wenn sie vor dieser Zeit gestoppt werden.",
     "LabelMinScreenshotDownloadWidth": "Minimale Breite für zu herunterladende Screenshot:",
@@ -1618,7 +1618,7 @@
     "Sample": "Ausschnitt",
     "Scene": "Szene",
     "Interview": "Interview",
-    "DeletedScene": "Gelöschte Scene",
+    "DeletedScene": "Gelöschte Szene",
     "BehindTheScenes": "Hinter den Kulissen",
     "Trailer": "Vorschau",
     "Clip": "Clip",
@@ -1719,5 +1719,7 @@
     "Short": "Kurzfilm",
     "LabelParallelImageEncodingLimit": "Grenze der parallelen Bildkodierung",
     "LabelParallelImageEncodingLimitHelp": "Maximale Anzahl von Bildkodierungen, die parallel ausgeführt werden können. Wenn Sie diesen Wert auf 0 setzen, wird eine Grenze auf der Grundlage Ihrer Systemspezifikationen gewählt.",
-    "HeaderPerformance": "Leistung"
+    "HeaderPerformance": "Leistung",
+    "LabelEnableAudioVbr": "Aktiviere Audio-Konvertierung mit variabler Bitrate (VBR)",
+    "LabelEnableAudioVbrHelp": "Eine variable Bitrate bietet bessere Qualität im Vergleich zu einer konstanten, kann jedoch in manchen Fällen zu Problemen beim Buffering und der Kompatibilität führen."
 }
