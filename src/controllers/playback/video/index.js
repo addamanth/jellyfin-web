@@ -776,7 +776,6 @@ import { PluginType } from '../../../types/plugin.ts';
         }
 
         function updateTimeDisplay(positionTicks, runtimeTicks, playbackStartTimeTicks, playbackRate, bufferedRanges) {
-            //currentTimeText.innerHTML = datetime.getDisplayTime(new Date());
             if (enableProgressByTimeOfDay) {
                 if (nowPlayingPositionSlider && !nowPlayingPositionSlider.dragging) {
                     if (programStartDateMs && programEndDateMs) {
@@ -816,9 +815,6 @@ import { PluginType } from '../../../types/plugin.ts';
 
                     if (runtimeTicks && positionTicks != null && currentRuntimeTicks && !enableProgressByTimeOfDay && currentItem.RunTimeTicks && currentItem.Type !== 'Recording' && playbackRate !== null) {
                         endsAtTime = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
-                        //const currentTime = datetime.getDisplayTime(new Date());
-                        //endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + globalize.translate('CurrentTimeAndEndsAtValue', currentTime, endsAtTime);
-                        //currentTimeText.innerHTML = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
                         //endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
                     } else {
                         //endsAtText.innerHTML = '';
