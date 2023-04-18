@@ -93,6 +93,18 @@ import { PluginType } from '../../../types/plugin.ts';
             }
 
             setTitle(displayItem, parentName);
+            ratingsText.innerHTML = mediaInfo.getPrimaryMediaInfoHtml(displayItem, {
+                officialRating: false,
+                criticRating: true,
+                starRating: true,
+                endsAt: false,
+                year: false,
+                programIndicator: false,
+                runtime: false,
+                subtitles: false,
+                originalAirDate: false,
+                episodeTitle: false
+            });
 
             const secondaryMediaInfo = view.querySelector('.osdSecondaryMediaInfo');
             const secondaryMediaInfoHtml = mediaInfo.getSecondaryMediaInfoHtml(displayItem, {
@@ -1335,6 +1347,15 @@ import { PluginType } from '../../../types/plugin.ts';
             resetIdle();
         }
 
+        function onWheel(e) {
+            if (e.deltaY < 0) {
+                playbackManager.volumeUp(currentPlayer);
+            }
+            if (e.deltaY > 0) {
+                playbackManager.volumeDown(currentPlayer);
+            }
+        }
+
         function onWindowMouseDown(e) {
             clickedElement = e.target;
             mouseIsDown = true;
@@ -1459,13 +1480,13 @@ import { PluginType } from '../../../types/plugin.ts';
         const startTimeText = view.querySelector('.startTimeText');
         const endTimeText = view.querySelector('.endTimeText');
         //const endsAtText = view.querySelector('.endsAtText');
+        const ratingsText = view.querySelector('.osdRatingsText');
         const btnRewind = view.querySelector('.btnRewind');
         const btnFastForward = view.querySelector('.btnFastForward');
         const transitionEndEventName = dom.whichTransitionEvent();
         const headerElement = document.querySelector('.skinHeader');
         const osdBottomElement = document.querySelector('.videoOsdBottom-maincontrols');
         const osdButtons = document.querySelector('.buttons');
-        //const currentTimeText = document.querySelector('.osdCurrentTimeText');
 
         nowPlayingPositionSlider.enableKeyboardDragging();
         nowPlayingVolumeSlider.enableKeyboardDragging();
@@ -1495,6 +1516,7 @@ import { PluginType } from '../../../types/plugin.ts';
                     capture: true,
                     passive: true
                 });
+                document.addEventListener('wheel', onWheel);
                 /* eslint-disable-next-line compat/compat */
                 dom.addEventListener(window, window.PointerEvent ? 'pointerdown' : 'mousedown', onWindowMouseDown, {
                     capture: true,
@@ -1536,6 +1558,7 @@ import { PluginType } from '../../../types/plugin.ts';
                 capture: true,
                 passive: true
             });
+            document.removeEventListener('wheel', onWheel);
             /* eslint-disable-next-line compat/compat */
             dom.removeEventListener(window, window.PointerEvent ? 'pointerdown' : 'mousedown', onWindowMouseDown, {
                 capture: true,
