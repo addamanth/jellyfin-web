@@ -197,6 +197,10 @@ html {
     color: #00a4dc;
 }
 
+/*.alphaPicker {
+    display: none;
+}*/
+
 .alphaPickerButton {
     color: #999;
     color: rgba(255, 255, 255, 0.5);

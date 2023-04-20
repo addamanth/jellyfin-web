@@ -824,13 +824,13 @@ import { PluginType } from '../../../types/plugin.ts';
                     } else {
                         nowPlayingPositionSlider.value = 0;
                     }
+                }
 
-                    if (runtimeTicks && positionTicks != null && currentRuntimeTicks && !enableProgressByTimeOfDay && currentItem.RunTimeTicks && currentItem.Type !== 'Recording' && playbackRate !== null) {
-                        endsAtTime = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
-                        //endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
-                    } else {
-                        //endsAtText.innerHTML = '';
-                    }
+                if (nowPlayingPositionSlider && runtimeTicks && positionTicks != null && currentRuntimeTicks && !enableProgressByTimeOfDay && currentItem.RunTimeTicks && currentItem.Type !== 'Recording' && playbackRate !== null) {
+                    endsAtTime = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
+                    //endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
+                } else {
+                    //endsAtText.innerHTML = '';
                 }
 
                 if (nowPlayingPositionSlider) {
