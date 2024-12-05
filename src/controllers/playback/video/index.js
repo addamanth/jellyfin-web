@@ -805,6 +805,7 @@ export default function (view) {
             nowPlayingPositionText.innerHTML = '';
             nowPlayingDurationText.innerHTML = '';
         } else {
+            let endsAtTime;
             if (nowPlayingPositionSlider && !nowPlayingPositionSlider.dragging) {
                 if (runtimeTicks) {
                     let pct = positionTicks / runtimeTicks;
@@ -814,10 +815,11 @@ export default function (view) {
                     nowPlayingPositionSlider.value = 0;
                 }
 
-                if (runtimeTicks && positionTicks != null && currentRuntimeTicks && !enableProgressByTimeOfDay && currentItem.RunTimeTicks && currentItem.Type !== 'Recording' && playbackRate !== null) {
-                    endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
+                if (nowPlayingPositionSlider && runtimeTicks && positionTicks != null && currentRuntimeTicks && !enableProgressByTimeOfDay && currentItem.RunTimeTicks && currentItem.Type !== 'Recording' && playbackRate !== null) {
+                    endsAtTime = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
+                    //endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
                 } else {
-                    endsAtText.innerHTML = '';
+                    //endsAtText.innerHTML = '';
                 }
             }
 
@@ -844,6 +846,9 @@ export default function (view) {
             } else {
                 updateTimeText(nowPlayingDurationText, runtimeTicks);
                 nowPlayingDurationText.classList.remove('hide');
+            }
+            if (endsAtTime) {
+                nowPlayingDurationText.innerHTML = nowPlayingDurationText.innerHTML + ' / ' + endsAtTime;
             }
         }
     }
