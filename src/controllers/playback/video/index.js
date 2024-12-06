@@ -332,7 +332,12 @@ export default function (view) {
             elem.classList.remove('hide');
             elem.classList.remove('videoOsdBottom-hidden');
 
-            focusElement ||= elem.querySelector('.btnPause');
+            if (focusElement == nowPlayingPositionSlider && layoutManager.tv) {
+                osdButtons.classList.add('hide');
+            } else {
+                osdButtons.classList.remove('hide');
+                focusElement ||= elem.querySelector('.btnPause');
+            }
 
             if (!layoutManager.mobile) {
                 _focus(focusElement);
@@ -1242,7 +1247,7 @@ export default function (view) {
                     }
                     return;
                 case 'Enter':
-                    playbackManager.playPause(currentPlayer);
+                    //playbackManager.playPause(currentPlayer);
                     showOsd(btnPlayPause);
                     return;
             }
@@ -1636,12 +1641,13 @@ export default function (view) {
     const nowPlayingDurationText = view.querySelector('.osdDurationText');
     const startTimeText = view.querySelector('.startTimeText');
     const endTimeText = view.querySelector('.endTimeText');
-    const endsAtText = view.querySelector('.endsAtText');
+    //const endsAtText = view.querySelector('.endsAtText');
     const btnRewind = view.querySelector('.btnRewind');
     const btnFastForward = view.querySelector('.btnFastForward');
     const transitionEndEventName = dom.whichTransitionEvent();
     const headerElement = document.querySelector('.skinHeader');
     const osdBottomElement = view.querySelector('.videoOsdBottom-maincontrols');
+    const osdButtons = document.querySelector('.buttons');
 
     nowPlayingPositionSlider.enableKeyboardDragging();
     nowPlayingVolumeSlider.enableKeyboardDragging();
