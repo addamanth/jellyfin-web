@@ -1989,5 +1989,8 @@
     "MediaSegmentAction.None": "Niente",
     "MediaSegmentAction.Skip": "Salta",
     "MoviesAndShows": "Movies and Shows",
-    "HeaderMediaSegmentActions": "Media Segment Actions"
+    "HeaderMediaSegmentActions": "Media Segment Actions",
+    "HeaderNextEpisode": "Prossimo Episodio",
+    "HeaderNextVideo": "Prossimo Video",
+    "MediaSegmentProvidersHelp": "Abilita e classifica i tuoi provider di segmenti multimediali preferiti in ordine di priorità."
 }
