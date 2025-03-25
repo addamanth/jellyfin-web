@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
+import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Loading from 'components/loading/LoadingComponent';
@@ -20,6 +20,8 @@ import globalize from 'lib/globalize';
 import { type ActionFunctionArgs, Form, useActionData, useNavigation } from 'react-router-dom';
 import { ActionData } from 'types/actionData';
 import { queryClient } from 'utils/query/queryClient';
+
+const CONFIG_KEY = 'metadata';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const api = ServerConnections.getCurrentApi();
@@ -43,13 +45,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         .updateConfiguration({ serverConfiguration: config });
 
     await getConfigurationApi(api)
-        .updateNamedConfiguration({ key: 'metadata', body: metadataConfig });
+        .updateNamedConfiguration({ key: CONFIG_KEY, body: metadataConfig });
 
     void queryClient.invalidateQueries({
         queryKey: [ CONFIG_QUERY_KEY ]
     });
     void queryClient.invalidateQueries({
-        queryKey: [ NAMED_CONFIG_QUERY_KEY, 'metadata' ]
+        queryKey: [ NAMED_CONFIG_QUERY_KEY, CONFIG_KEY ]
     });
 
     return {
@@ -67,7 +69,7 @@ export const Component = () => {
         data: namedConfig,
         isPending: isNamedConfigPending,
         isError: isNamedConfigError
-    } = useNamedConfiguration('metadata');
+    } = useNamedConfiguration(CONFIG_KEY);
 
     const navigation = useNavigation();
     const actionData = useActionData() as ActionData | undefined;
@@ -109,7 +111,7 @@ export const Component = () => {
                             <FormControl>
                                 <FormControlLabel
                                     control={
-                                        <Switch
+                                        <Checkbox
                                             name={'DisplayFolderView'}
                                             defaultChecked={config.EnableFolderView}
                                         />
@@ -122,7 +124,7 @@ export const Component = () => {
                             <FormControl>
                                 <FormControlLabel
                                     control={
-                                        <Switch
+                                        <Checkbox
                                             name={'DisplaySpecialsWithinSeasons'}
                                             defaultChecked={config.DisplaySpecialsWithinSeasons}
                                         />
@@ -134,7 +136,7 @@ export const Component = () => {
                             <FormControl>
                                 <FormControlLabel
                                     control={
-                                        <Switch
+                                        <Checkbox
                                             name={'GroupMoviesIntoCollections'}
                                             defaultChecked={config.EnableGroupingIntoCollections}
                                         />
@@ -147,7 +149,7 @@ export const Component = () => {
                             <FormControl>
                                 <FormControlLabel
                                     control={
-                                        <Switch
+                                        <Checkbox
                                             name={'EnableExternalContentInSuggestions'}
                                             defaultChecked={config.EnableExternalContentInSuggestions}
                                         />
