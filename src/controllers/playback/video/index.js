@@ -1255,7 +1255,7 @@ export default function (view) {
                     if (!e.shiftKey) {
                         e.preventDefault();
                         showOsd(nowPlayingPositionSlider);
-                        nowPlayingPositionSlider.dispatchEvent(new KeyboardEvent(e.type, e));
+                        //nowPlayingPositionSlider.dispatchEvent(new KeyboardEvent(e.type, e));
                     }
                     return;
                 case 'Enter':
@@ -1359,7 +1359,7 @@ export default function (view) {
             case 'GamepadDPadLeft':
             case 'GamepadLeftThumbstickLeft':
                 // Ignores gamepad events that are always triggered, even when not focused.
-                if (document.hasFocus()) { /* eslint-disable-line compat/compat */
+                if (document.hasFocus()) {
                     playbackManager.rewind(currentPlayer);
                     showOsd(btnRewind);
                 }
@@ -1368,7 +1368,7 @@ export default function (view) {
             case 'GamepadDPadRight':
             case 'GamepadLeftThumbstickRight':
                 // Ignores gamepad events that are always triggered, even when not focused.
-                if (document.hasFocus()) { /* eslint-disable-line compat/compat */
+                if (document.hasFocus()) {
                     playbackManager.fastForward(currentPlayer);
                     showOsd(btnFastForward);
                 }
