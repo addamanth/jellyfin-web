@@ -4,13 +4,13 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import Dashboard from '../../../../utils/dashboard';
 import globalize from '../../../../lib/globalize';
 import loading from '../../../../components/loading/loading';
-import toast from '../../../../components/toast/toast';
 import SectionTitleContainer from '../../../../elements/SectionTitleContainer';
-import InputElement from '../../../../elements/InputElement';
-import ButtonElement from '../../../../elements/ButtonElement';
+import Input from '../../../../elements/emby-input/Input';
+import Button from '../../../../elements/emby-button/Button';
 import AccessContainer from '../../../../components/dashboard/users/AccessContainer';
 import CheckBoxElement from '../../../../elements/CheckBoxElement';
 import Page from '../../../../components/Page';
+import Toast from 'apps/dashboard/components/Toast';
 
 type UserInput = {
     Name?: string;
@@ -25,7 +25,12 @@ type ItemsArr = {
 const UserNew = () => {
     const [ channelsItems, setChannelsItems ] = useState<ItemsArr[]>([]);
     const [ mediaFoldersItems, setMediaFoldersItems ] = useState<ItemsArr[]>([]);
+    const [ isErrorToastOpen, setIsErrorToastOpen ] = useState(false);
     const element = useRef<HTMLDivElement>(null);
+
+    const handleToastClose = useCallback(() => {
+        setIsErrorToastOpen(false);
+    }, []);
 
     const getItemsResult = (items: BaseItemDto[]) => {
         return items.map(item =>
@@ -150,7 +155,7 @@ const UserNew = () => {
                     console.error('[usernew] failed to update user policy', err);
                 });
             }, function () {
-                toast(globalize.translate('ErrorDefault'));
+                setIsErrorToastOpen(true);
                 loading.hide();
             });
         };
@@ -185,6 +190,11 @@ const UserNew = () => {
             id='newUserPage'
             className='mainAnimatedPage type-interior'
         >
+            <Toast
+                open={isErrorToastOpen}
+                onClose={handleToastClose}
+                message={globalize.translate('ErrorDefault')}
+            />
             <div ref={element} className='content-primary'>
                 <div className='verticalSection'>
                     <SectionTitleContainer
@@ -194,18 +204,18 @@ const UserNew = () => {
 
                 <form className='newUserProfileForm'>
                     <div className='inputContainer'>
-                        <InputElement
+                        <Input
                             type='text'
                             id='txtUsername'
-                            label='LabelName'
-                            options={'required'}
+                            label={globalize.translate('LabelName')}
+                            required
                         />
                     </div>
                     <div className='inputContainer'>
-                        <InputElement
+                        <Input
                             type='password'
                             id='txtPassword'
-                            label='LabelPassword'
+                            label={globalize.translate('LabelPassword')}
                         />
                     </div>
                     <AccessContainer
@@ -248,16 +258,16 @@ const UserNew = () => {
                         ))}
                     </AccessContainer>
                     <div>
-                        <ButtonElement
+                        <Button
                             type='submit'
                             className='raised button-submit block'
-                            title='Save'
+                            title={globalize.translate('Save')}
                         />
-                        <ButtonElement
+                        <Button
                             type='button'
                             id='btnCancel'
                             className='raised button-cancel block'
-                            title='ButtonCancel'
+                            title={globalize.translate('ButtonCancel')}
                         />
                     </div>
                 </form>

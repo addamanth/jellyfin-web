@@ -1,8 +1,10 @@
-import type { ThemeOptions } from '@mui/material/styles/createTheme';
+import type { ColorSystemOptions, ThemeOptions } from '@mui/material/styles';
+import type {} from '@mui/material/themeCssVarsAugmentation';
 
 const LIST_ICON_WIDTH = 36;
 
-export const DEFAULT_THEME_OPTIONS: ThemeOptions = {
+/** The default "Dark" color scheme. */
+export const DEFAULT_COLOR_SCHEME: ColorSystemOptions = {
     palette: {
         mode: 'dark',
         primary: {
@@ -22,9 +24,13 @@ export const DEFAULT_THEME_OPTIONS: ThemeOptions = {
             main: '#f2b01e' // Yellow color
         },
         error: {
-            main: '#cb272a' // Red color
+            main: '#c62828' // Red color
         }
-    },
+    }
+};
+
+/** The default customizations to the default MUI theme. */
+export const DEFAULT_THEME_OPTIONS: ThemeOptions = {
     typography: {
         fontFamily: '"Noto Sans", sans-serif',
         button: {
@@ -47,6 +53,13 @@ export const DEFAULT_THEME_OPTIONS: ThemeOptions = {
                     // NOTE: This seems like a bug. Block content does not fill the container width.
                     flexGrow: 1
                 }
+            }
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                colorTransparent: ({ theme }) => ({
+                    color: theme.vars.palette.text.primary
+                })
             }
         },
         MuiButton: {

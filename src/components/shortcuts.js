@@ -8,9 +8,9 @@ import { playbackManager } from './playback/playbackmanager';
 import inputManager from '../scripts/inputManager';
 import { appRouter } from './router/appRouter';
 import globalize from '../lib/globalize';
-import dom from '../scripts/dom';
+import { ServerConnections } from 'lib/jellyfin-apiclient';
+import dom from '../utils/dom';
 import recordingHelper from './recordingcreator/recordinghelper';
-import ServerConnections from './ServerConnections';
 import toast from './toast/toast';
 import * as userSettings from '../scripts/settings/userSettings';
 import { toApi } from 'utils/jellyfin-apiclient/compat';
@@ -390,7 +390,7 @@ export function onClick(e) {
             }
         }
 
-        if (action) {
+        if (action && action !== 'none') {
             executeAction(card, actionElement, action);
 
             e.preventDefault();

@@ -3,10 +3,10 @@ import 'material-design-icons-iconfont';
 import loading from '../../components/loading/loading';
 import keyboardnavigation from '../../scripts/keyboardNavigation';
 import dialogHelper from '../../components/dialogHelper/dialogHelper';
-import ServerConnections from '../../components/ServerConnections';
 import Screenfull from 'screenfull';
 import TableOfContents from './tableOfContents';
 import { translateHtml } from '../../lib/globalize';
+import { ServerConnections } from 'lib/jellyfin-apiclient';
 import browser from 'scripts/browser';
 import * as userSettings from '../../scripts/settings/userSettings';
 import TouchHelper from 'scripts/touchHelper';
@@ -32,6 +32,7 @@ export class BookPlayer {
         this.type = PluginType.MediaPlayer;
         this.id = 'bookplayer';
         this.priority = 1;
+        this.THEMES = THEMES;
         if (!userSettings.theme() || userSettings.theme() === 'dark') {
             this.theme = 'dark';
         } else {

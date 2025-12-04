@@ -12,14 +12,15 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Loading from 'components/loading/LoadingComponent';
 import Page from 'components/Page';
-import ServerConnections from 'components/ServerConnections';
 import { getConfigurationApi } from '@jellyfin/sdk/lib/utils/api/configuration-api';
 import { QUERY_KEY as CONFIG_QUERY_KEY, useConfiguration } from 'hooks/useConfiguration';
-import { QUERY_KEY as NAMED_CONFIG_QUERY_KEY, NamedConfiguration, useNamedConfiguration } from 'hooks/useNamedConfiguration';
+import { QUERY_KEY as NAMED_CONFIG_QUERY_KEY, useNamedConfiguration } from 'hooks/useNamedConfiguration';
 import globalize from 'lib/globalize';
+import { ServerConnections } from 'lib/jellyfin-apiclient';
 import { type ActionFunctionArgs, Form, useActionData, useNavigation } from 'react-router-dom';
 import { ActionData } from 'types/actionData';
 import { queryClient } from 'utils/query/queryClient';
+import type { MetadataConfiguration } from '@jellyfin/sdk/lib/generated-client/models/metadata-configuration';
 
 const CONFIG_KEY = 'metadata';
 
@@ -32,13 +33,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     const { data: config } = await getConfigurationApi(api).getConfiguration();
 
-    const metadataConfig: NamedConfiguration = {
+    const metadataConfig: MetadataConfiguration = {
         UseFileCreationTimeForDateAdded: data.DateAddedBehavior.toString() === '1'
     };
 
     config.EnableFolderView = data.DisplayFolderView?.toString() === 'on';
     config.DisplaySpecialsWithinSeasons = data.DisplaySpecialsWithinSeasons?.toString() === 'on';
-    config.EnableGroupingIntoCollections = data.GroupMoviesIntoCollections?.toString() === 'on';
+    config.EnableGroupingMoviesIntoCollections = data.GroupMoviesIntoCollections?.toString() === 'on';
+    config.EnableGroupingShowsIntoCollections = data.GroupShowsIntoCollections?.toString() === 'on';
     config.EnableExternalContentInSuggestions = data.EnableExternalContentInSuggestions?.toString() === 'on';
 
     await getConfigurationApi(api)
@@ -69,7 +71,7 @@ export const Component = () => {
         data: namedConfig,
         isPending: isNamedConfigPending,
         isError: isNamedConfigError
-    } = useNamedConfiguration(CONFIG_KEY);
+    } = useNamedConfiguration<MetadataConfiguration>(CONFIG_KEY);
 
     const navigation = useNavigation();
     const actionData = useActionData() as ActionData | undefined;
@@ -96,7 +98,7 @@ export const Component = () => {
                                     {globalize.translate('SettingsSaved')}
                                 </Alert>
                             )}
-                            <Typography variant='h2'>{globalize.translate('Display')}</Typography>
+                            <Typography variant='h1'>{globalize.translate('Display')}</Typography>
                             <TextField
                                 name={'DateAddedBehavior'}
                                 label={globalize.translate('LabelDateAddedBehavior')}
@@ -138,12 +140,25 @@ export const Component = () => {
                                     control={
                                         <Checkbox
                                             name={'GroupMoviesIntoCollections'}
-                                            defaultChecked={config.EnableGroupingIntoCollections}
+                                            defaultChecked={config.EnableGroupingMoviesIntoCollections}
                                         />
                                     }
                                     label={globalize.translate('LabelGroupMoviesIntoCollections')}
                                 />
                                 <FormHelperText>{globalize.translate('LabelGroupMoviesIntoCollectionsHelp')}</FormHelperText>
+                            </FormControl>
+
+                            <FormControl>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            name={'GroupShowsIntoCollections'}
+                                            defaultChecked={config.EnableGroupingShowsIntoCollections}
+                                        />
+                                    }
+                                    label={globalize.translate('LabelGroupShowsIntoCollections')}
+                                />
+                                <FormHelperText>{globalize.translate('LabelGroupShowsIntoCollectionsHelp')}</FormHelperText>
                             </FormControl>
 
                             <FormControl>

@@ -3,7 +3,7 @@ import loading from '../../components/loading/loading';
 import dialogHelper from '../../components/dialogHelper/dialogHelper';
 import keyboardnavigation from '../../scripts/keyboardNavigation';
 import { appRouter } from '../../components/router/appRouter';
-import ServerConnections from '../../components/ServerConnections';
+import { ServerConnections } from 'lib/jellyfin-apiclient';
 import * as userSettings from '../../scripts/settings/userSettings';
 import { PluginType } from '../../types/plugin.ts';
 
@@ -395,7 +395,7 @@ class ArchiveSource {
         files = files.filter((file) => {
             const name = file.file.name;
             const index = name.lastIndexOf('.');
-            return index !== -1 && IMAGE_FORMATS.includes(name.slice(index + 1));
+            return index !== -1 && IMAGE_FORMATS.includes(name.slice(index + 1).toLowerCase());
         });
         files.sort((a, b) => {
             if (a.file.name < b.file.name) {

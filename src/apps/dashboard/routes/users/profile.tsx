@@ -1,18 +1,16 @@
 import type { BaseItemDto, NameIdPair, SyncPlayUserAccessType, UserDto } from '@jellyfin/sdk/lib/generated-client';
 import escapeHTML from 'escape-html';
 import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import Dashboard from '../../../../utils/dashboard';
 import globalize from '../../../../lib/globalize';
-import ButtonElement from '../../../../elements/ButtonElement';
+import Button from '../../../../elements/emby-button/Button';
 import CheckBoxElement from '../../../../elements/CheckBoxElement';
-import InputElement from '../../../../elements/InputElement';
 import LinkButton from '../../../../elements/emby-button/LinkButton';
+import Input from '../../../../elements/emby-input/Input';
 import SectionTitleContainer from '../../../../elements/SectionTitleContainer';
 import SectionTabs from '../../../../components/dashboard/users/SectionTabs';
 import loading from '../../../../components/loading/loading';
-import toast from '../../../../components/toast/toast';
 import SelectElement from '../../../../elements/SelectElement';
 import Page from '../../../../components/Page';
 
@@ -25,16 +23,8 @@ const getCheckedElementDataIds = (elements: NodeListOf<Element>) => (
         .map(e => e.getAttribute('data-id'))
 );
 
-function onSaveComplete() {
-    Dashboard.navigate('/dashboard/users')
-        .catch(err => {
-            console.error('[useredit] failed to navigate to user profile', err);
-        });
-    loading.hide();
-    toast(globalize.translate('SettingsSaved'));
-}
-
 const UserEdit = () => {
+    const navigate = useNavigate();
     const [ searchParams ] = useSearchParams();
     const userId = searchParams.get('userId');
     const [ userDto, setUserDto ] = useState<UserDto>();
@@ -228,7 +218,10 @@ const UserEdit = () => {
             window.ApiClient.updateUser(user).then(() => (
                 window.ApiClient.updateUserPolicy(user.Id || '', user.Policy || { PasswordResetProviderId: '', AuthenticationProviderId: '' })
             )).then(() => {
-                onSaveComplete();
+                navigate('/dashboard/users', {
+                    state: { openSavedToast: true }
+                });
+                loading.hide();
             }).catch(err => {
                 console.error('[useredit] failed to update user', err);
             });
@@ -314,11 +307,11 @@ const UserEdit = () => {
                         </div>
                     </div>
                     <div id='fldUserName' className='inputContainer'>
-                        <InputElement
+                        <Input
                             type='text'
                             id='txtUserName'
-                            label='LabelName'
-                            options={'required'}
+                            label={globalize.translate('LabelName')}
+                            required
                         />
                     </div>
                     <div className='selectContainer fldSelectLoginProvider hide'>
@@ -416,11 +409,14 @@ const UserEdit = () => {
                     <br />
                     <div className='verticalSection'>
                         <div className='inputContainer'>
-                            <InputElement
+                            <Input
                                 type='number'
                                 id='txtRemoteClientBitrateLimit'
-                                label='LabelRemoteClientBitrateLimit'
-                                options={'inputMode="decimal" pattern="[0-9]*(.[0-9]+)?" min="{0}" step=".25"'}
+                                label={globalize.translate('LabelRemoteClientBitrateLimit')}
+                                inputMode='decimal'
+                                pattern='[0-9]*(.[0-9]+)?'
+                                min='0'
+                                step='.25'
                             />
                             <div className='fieldDescription'>
                                 {globalize.translate('LabelRemoteClientBitrateLimitHelp')}
@@ -517,11 +513,11 @@ const UserEdit = () => {
                     <br />
                     <div className='verticalSection'>
                         <div className='inputContainer' id='fldLoginAttemptsBeforeLockout'>
-                            <InputElement
+                            <Input
                                 type='number'
                                 id='txtLoginAttemptsBeforeLockout'
-                                label='LabelUserLoginAttemptsBeforeLockout'
-                                options={'min={-1} step={1}'}
+                                label={globalize.translate('LabelUserLoginAttemptsBeforeLockout')}
+                                min={-1} step={1}
                             />
                             <div className='fieldDescription'>
                                 {globalize.translate('OptionLoginAttemptsBeforeLockout')}
@@ -534,11 +530,11 @@ const UserEdit = () => {
                     <br />
                     <div className='verticalSection'>
                         <div className='inputContainer' id='fldMaxActiveSessions'>
-                            <InputElement
+                            <Input
                                 type='number'
                                 id='txtMaxActiveSessions'
-                                label='LabelUserMaxActiveSessions'
-                                options={'min={0} step={1}'}
+                                label={globalize.translate('LabelUserMaxActiveSessions')}
+                                min={0} step={1}
                             />
                             <div className='fieldDescription'>
                                 {globalize.translate('OptionMaxActiveSessions')}
@@ -550,16 +546,16 @@ const UserEdit = () => {
                     </div>
                     <br />
                     <div>
-                        <ButtonElement
+                        <Button
                             type='submit'
                             className='raised button-submit block'
-                            title='Save'
+                            title={globalize.translate('Save')}
                         />
-                        <ButtonElement
+                        <Button
                             type='button'
                             id='btnCancel'
                             className='raised button-cancel block'
-                            title='ButtonCancel'
+                            title={globalize.translate('ButtonCancel')}
                         />
                     </div>
                 </form>

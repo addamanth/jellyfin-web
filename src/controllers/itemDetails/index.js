@@ -21,12 +21,13 @@ import loading from 'components/loading/loading';
 import { playbackManager } from 'components/playback/playbackmanager';
 import { appRouter } from 'components/router/appRouter';
 import itemShortcuts from 'components/shortcuts';
-import ServerConnections from 'components/ServerConnections';
+import { AppFeature } from 'constants/appFeature';
+import globalize from 'lib/globalize';
+import { ServerConnections } from 'lib/jellyfin-apiclient';
 import browser from 'scripts/browser';
 import datetime from 'scripts/datetime';
-import dom from 'scripts/dom';
+import dom from 'utils/dom';
 import { download } from 'scripts/fileDownloader';
-import globalize from 'lib/globalize';
 import libraryMenu from 'scripts/libraryMenu';
 import * as userSettings from 'scripts/settings/userSettings';
 import { getPortraitShape, getSquareShape } from 'utils/card';
@@ -43,6 +44,14 @@ import 'elements/emby-scroller/emby-scroller';
 import 'elements/emby-select/emby-select';
 
 import 'styles/scrollstyles.scss';
+
+/** Item types that use a list view for their children. */
+const LIST_VIEW_TYPES = [
+    BaseItemKind.MusicAlbum,
+    BaseItemKind.Playlist,
+    BaseItemKind.Season,
+    BaseItemKind.Series
+];
 
 function autoFocus(container) {
     import('../../components/autoFocuser').then(({ default: autoFocuser }) => {
@@ -503,7 +512,7 @@ function renderBackdrop(page, item) {
         // If backdrops are disabled, but the header banner is enabled, add a class to the page to disable the transparency
         page.classList.toggle('noBackdropTransparency', isBannerEnabled && !userSettings.enableBackdrops());
 
-        setBackdrops([item], null, null, isBannerEnabled);
+        setBackdrops([item], null, isBannerEnabled);
     } else {
         clearBackdrop();
     }
@@ -553,7 +562,6 @@ function reloadFromItem(instance, page, params, item, user) {
     renderBackdrop(page, item);
 
     // Render the main information for the item
-    page.querySelector('.detailPagePrimaryContainer').classList.add('detailRibbon');
     renderName(item, page.querySelector('.nameContainer'), params.context);
     renderDetails(page, item, apiClient, params.context);
     renderTrackSelections(page, instance, item);
@@ -636,7 +644,7 @@ function reloadFromItem(instance, page, params, item, user) {
 
     if (item.Type == 'Person' && item.ProductionLocations && item.ProductionLocations.length) {
         let location = item.ProductionLocations[0];
-        if (!layoutManager.tv && appHost.supports('externallinks')) {
+        if (!layoutManager.tv && appHost.supports(AppFeature.ExternalLinks)) {
             location = `<a is="emby-linkbutton" class="button-link textlink" target="_blank" href="https://www.openstreetmap.org/search?query=${encodeURIComponent(location)}">${escapeHtml(location)}</a>`;
         } else {
             location = escapeHtml(location);
@@ -650,7 +658,7 @@ function reloadFromItem(instance, page, params, item, user) {
     setPeopleHeader(page, item);
     loading.hide();
 
-    if (item.Type === 'Book' && item.CanDownload && appHost.supports('filedownload')) {
+    if (item.Type === 'Book' && item.CanDownload && appHost.supports(AppFeature.FileDownload)) {
         hideAll(page, 'btnDownload', true);
     }
 
@@ -748,12 +756,15 @@ function renderDetailImage(apiClient, elem, item, loader) {
 }
 
 function renderImage(page, item, apiClient) {
-    renderDetailImage(
-        apiClient,
-        page.querySelector('.detailImageContainer'),
-        item,
-        imageLoader
-    );
+    page.querySelectorAll('.detailImageContainer')
+        .forEach(elem => {
+            renderDetailImage(
+                apiClient,
+                elem,
+                item,
+                imageLoader
+            );
+        });
 }
 
 function setPeopleHeader(page, item) {
@@ -802,18 +813,22 @@ function setInitialCollapsibleState(page, item, apiClient, context, user) {
     page.querySelector('.collectionItems').innerHTML = '';
 
     if (item.Type == 'Playlist') {
-        page.querySelector('#childrenCollapsible').classList.remove('hide');
+        page.querySelector('#listChildrenCollapsible').classList.remove('hide');
+        page.querySelector('#childrenCollapsible').classList.add('hide');
         renderPlaylistItems(page, item);
     } else if (item.Type == 'Studio' || item.Type == 'Person' || item.Type == 'Genre' || item.Type == 'MusicGenre' || item.Type == 'MusicArtist') {
-        page.querySelector('#childrenCollapsible').classList.remove('hide');
+        page.querySelector('#listChildrenCollapsible').classList.remove('hide');
+        page.querySelector('#childrenCollapsible').classList.add('hide');
         renderItemsByName(page, item);
     } else if (item.IsFolder) {
         if (item.Type == 'BoxSet') {
+            page.querySelector('#listChildrenCollapsible').classList.add('hide');
             page.querySelector('#childrenCollapsible').classList.add('hide');
         }
 
         renderChildren(page, item);
     } else {
+        page.querySelector('#listChildrenCollapsible').classList.add('hide');
         page.querySelector('#childrenCollapsible').classList.add('hide');
     }
 
@@ -853,7 +868,7 @@ function setInitialCollapsibleState(page, item, apiClient, context, user) {
         page.querySelector('#additionalPartsCollapsible').classList.add('hide');
     }
 
-    if (item.Type == 'MusicAlbum' || item.Type == 'MusicArtist') {
+    if (item.Type == BaseItemKind.MusicAlbum) {
         renderMusicVideos(page, item, user);
     } else {
         page.querySelector('#musicVideosCollapsible').classList.add('hide');
@@ -1083,7 +1098,7 @@ function renderDetails(page, item, apiClient, context) {
     renderLyricsContainer(page, item, apiClient);
 
     // Don't allow redirection to other websites from the TV layout
-    if (!layoutManager.tv && appHost.supports('externallinks')) {
+    if (!layoutManager.tv && appHost.supports(AppFeature.ExternalLinks)) {
         renderLinks(page, item);
     }
 
@@ -1193,7 +1208,7 @@ function renderMoreFromArtist(view, item, apiClient) {
         if (item.Type === 'MusicArtist') {
             query.ContributingArtistIds = item.Id;
         } else {
-            query.ContributingArtistIds = item.AlbumArtists.map(artist => artist.Id).join(',');
+            query.AlbumArtistIds = item.AlbumArtists.map(artist => artist.Id).join(',');
         }
 
         apiClient.getItems(apiClient.getCurrentUserId(), query).then(function (result) {
@@ -1337,6 +1352,9 @@ function renderTags(page, item) {
 }
 
 function renderChildren(page, item) {
+    const childrenCollapsible = page.querySelector(LIST_VIEW_TYPES.includes(item.Type) ? '#listChildrenCollapsible' : '#childrenCollapsible');
+    const childrenItemsContainer = childrenCollapsible.querySelector('.itemsContainer');
+
     let fields = 'ItemCounts,PrimaryImageAspectRatio,CanDelete,MediaSourceCount';
     const query = {
         ParentId: item.Id,
@@ -1374,12 +1392,10 @@ function renderChildren(page, item) {
         let html = '';
         let scrollX = false;
         let isList = false;
-        const childrenItemsContainer = page.querySelector('.childrenItemsContainer');
 
         if (item.Type == 'MusicAlbum') {
             let showArtist = false;
             for (const track of result.Items) {
-                // eslint-disable-next-line sonarjs/no-alphabetical-sort
                 if (!isEqual(track.ArtistItems.map(x => x.Id).sort(), track.AlbumArtists.map(x => x.Id).sort())) {
                     showArtist = true;
                     break;
@@ -1451,7 +1467,7 @@ function renderChildren(page, item) {
         }
 
         if (item.Type !== 'BoxSet') {
-            page.querySelector('#childrenCollapsible').classList.remove('hide');
+            childrenCollapsible.classList.remove('hide');
         }
         if (scrollX) {
             childrenItemsContainer.classList.add('scrollX');
@@ -1502,21 +1518,23 @@ function renderChildren(page, item) {
         }
     });
 
+    let childrenTitle = globalize.translate('Items');
     if (item.Type == 'Season') {
-        page.querySelector('#childrenTitle').innerHTML = globalize.translate('Episodes');
+        childrenTitle = globalize.translate('Episodes');
     } else if (item.Type == 'Series') {
-        page.querySelector('#childrenTitle').innerHTML = globalize.translate('HeaderSeasons');
+        childrenTitle = globalize.translate('HeaderSeasons');
     } else if (item.Type == 'MusicAlbum') {
-        page.querySelector('#childrenTitle').innerHTML = globalize.translate('HeaderTracks');
-    } else {
-        page.querySelector('#childrenTitle').innerHTML = globalize.translate('Items');
+        childrenTitle = globalize.translate('HeaderTracks');
     }
+    childrenCollapsible.querySelectorAll('.sectionTitle > span').forEach(el => {
+        el.innerText = childrenTitle;
+    });
 
     if (item.Type == 'MusicAlbum' || item.Type == 'Season') {
-        page.querySelector('.childrenSectionHeader').classList.add('hide');
-        page.querySelector('#childrenCollapsible').classList.add('verticalSection-extrabottompadding');
+        childrenCollapsible.querySelector('.sectionTitle').classList.add('hide');
+        childrenCollapsible.classList.add('verticalSection-extrabottompadding');
     } else {
-        page.querySelector('.childrenSectionHeader').classList.remove('hide');
+        childrenCollapsible.querySelector('.sectionTitle').classList.remove('hide');
     }
 }
 
@@ -1764,14 +1782,9 @@ function renderMusicVideos(page, item, user) {
         SortOrder: 'Ascending',
         IncludeItemTypes: 'MusicVideo',
         Recursive: true,
-        Fields: 'PrimaryImageAspectRatio,CanDelete,MediaSourceCount'
+        Fields: 'PrimaryImageAspectRatio,CanDelete,MediaSourceCount',
+        AlbumIds: item.Id
     };
-
-    if (item.Type == 'MusicAlbum') {
-        request.AlbumIds = item.Id;
-    } else {
-        request.ArtistIds = item.Id;
-    }
 
     ServerConnections.getApiClient(item.ServerId).getItems(user.Id, request).then(function (result) {
         if (result.Items.length) {
