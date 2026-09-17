@@ -345,6 +345,13 @@ export default function (view) {
             elem.classList.remove('hide');
             elem.classList.remove('videoOsdBottom-hidden');
 
+            if (focusElement == nowPlayingPositionSlider && layoutManager.tv) {
+                osdButtons.classList.add('hide');
+            } else {
+                osdButtons.classList.remove('hide');
+                focusElement ||= elem.querySelector('.btnPause');
+            }
+
             if (!layoutManager.mobile) {
                 _focus(focusElement);
             }
@@ -819,23 +826,22 @@ export default function (view) {
             nowPlayingPositionText.innerHTML = '';
             nowPlayingDurationText.innerHTML = '';
         } else {
-            if (nowPlayingPositionSlider && !nowPlayingPositionSlider.dragging) {
-                if (runtimeTicks) {
-                    let pct = positionTicks / runtimeTicks;
-                    pct *= 100;
-                    nowPlayingPositionSlider.value = pct;
-                } else {
-                    nowPlayingPositionSlider.value = 0;
+            let endsAtTime;
+            if (nowPlayingPositionSlider) {
+                if (!nowPlayingPositionSlider.dragging) {
+                    if (runtimeTicks) {
+                        let pct = positionTicks / runtimeTicks;
+                        pct *= 100;
+                        nowPlayingPositionSlider.value = pct;
+                    } else {
+                        nowPlayingPositionSlider.value = 0;
+                    }
                 }
 
                 if (runtimeTicks && positionTicks != null && currentRuntimeTicks && !enableProgressByTimeOfDay && currentItem.RunTimeTicks && currentItem.Type !== 'Recording' && playbackRate !== null) {
-                    endsAtText.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;' + mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, true);
-                } else {
-                    endsAtText.innerHTML = '';
+                    endsAtTime = mediaInfo.getEndsAtFromPosition(runtimeTicks, positionTicks, playbackRate, false);
                 }
-            }
 
-            if (nowPlayingPositionSlider) {
                 nowPlayingPositionSlider.setBufferedRanges(bufferedRanges, runtimeTicks, positionTicks);
             }
 
@@ -858,6 +864,9 @@ export default function (view) {
             } else {
                 updateTimeText(nowPlayingDurationText, runtimeTicks);
                 nowPlayingDurationText.classList.remove('hide');
+            }
+            if (endsAtTime) {
+                nowPlayingDurationText.innerHTML = nowPlayingDurationText.innerHTML + ' / ' + endsAtTime;
             }
         }
     }
@@ -1248,13 +1257,13 @@ export default function (view) {
                     if (!e.shiftKey) {
                         e.preventDefault();
                         showOsd(nowPlayingPositionSlider);
-                        nowPlayingPositionSlider.dispatchEvent(new KeyboardEvent(e.type, e));
+                        //nowPlayingPositionSlider.dispatchEvent(new KeyboardEvent(e.type, e));
                     }
                     return;
                 case 'Enter':
                     if (e.target.tagName !== 'BUTTON') {
                         e.preventDefault();
-                        playbackManager.playPause(currentPlayer);
+                        //playbackManager.playPause(currentPlayer);
                         showOsd(btnPlayPause);
                     }
                     return;
@@ -1645,12 +1654,13 @@ export default function (view) {
     const nowPlayingDurationText = view.querySelector('.osdDurationText');
     const startTimeText = view.querySelector('.startTimeText');
     const endTimeText = view.querySelector('.endTimeText');
-    const endsAtText = view.querySelector('.endsAtText');
+    //const endsAtText = view.querySelector('.endsAtText');
     const btnRewind = view.querySelector('.btnRewind');
     const btnFastForward = view.querySelector('.btnFastForward');
     const transitionEndEventName = dom.whichTransitionEvent();
     const headerElement = document.querySelector('.skinHeader');
     const osdBottomElement = view.querySelector('.videoOsdBottom-maincontrols');
+    const osdButtons = document.querySelector('.buttons');
 
     nowPlayingPositionSlider.enableKeyboardDragging();
     nowPlayingVolumeSlider.enableKeyboardDragging();
